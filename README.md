@@ -87,6 +87,7 @@ main(int argc, char *argv[])
 }```
 ```
 ![alt text for screen readers](p1exec.PNG).
+
 1 answer: The variable in the child process is 100 to start with, so is the parent. Once the child function runs, it can change the variable x to 120 and print that as x. This does not change the parent's variable x as 100, due to the process being duplicated from the fork. When the parent's variable x changes, the value becomes 200, but does not impact the child's variable x.
 
 2. Write a program that opens a file (with the `open()` system call) and then calls `fork()` to create a new process. Can both the child and parent access the file descriptor returned by `open()`? What happens when they are writing to the file concurrently, i.e., at the same time?
@@ -125,6 +126,7 @@ main(int argc, char *argv[])
 }  
 ```
 ![alt text for screen readers](p3exec.PNG)
+
 3 Answer: To have the child process print first, you must use the wait() command, unless you create a pipe for the parent before the fork. After the fork, close the writing part of the parent and then the reading part of the child in order to rearrange the order of printing.
 
 4. Write a program that calls `fork()` and then calls some form of `exec()` to run the program `/bin/ls`. See if you can try all of the variants of `exec()`, including (on Linux) `execl()`, `execle()`, `execlp()`, `execv()`, `execvp()`, and `execvpe()`. Why do you think there are so many variants of the same basic call?
@@ -174,6 +176,33 @@ main(int argc, char *argv[])
 7. Write a program that creates a child process, and then in the child closes standard output (`STDOUT FILENO`). What happens if the child calls `printf()` to print some output after closing the descriptor?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
-```
+//#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+int
+main(int argc, char *argv[])
+{
 
+    int rc = fork();
+
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child path changing x
+        printf("Child run before close\n");
+        fclose(stdout);
+        printf("Child run after close\n");
+    } else {
+        // parent path changing x
+        int rc_wait = wait(NULL); //Wait for child process to finish
+        printf("Parent process\n");
+    }
+    return 0;
+}  
+```
+![alt text for screen readers](7exec.PNG)
+
+7 Answer: When priftf() is called after standard output is closed in the child, the output is not printed. In the code I provided, there is a printf statement for "Child run after close", which never prints, as seen below.
