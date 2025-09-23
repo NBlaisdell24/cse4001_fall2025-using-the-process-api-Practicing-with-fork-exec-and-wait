@@ -193,7 +193,7 @@ main(int argc, char *argv[])
     } else if (rc == 0) {
         // child path changing x
         printf("Child run before close\n");
-        fclose(stdout);
+        close(STDOUT_FILENO);
         printf("Child run after close\n");
     } else {
         // parent path changing x
