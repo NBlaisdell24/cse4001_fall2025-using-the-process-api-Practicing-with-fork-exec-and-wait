@@ -136,9 +136,33 @@ main(int argc, char *argv[])
 5. Now write a program that uses `wait()` to wait for the child process to finish in the parent. What does `wait()` return? What happens if you use `wait()` in the child?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
-```
+// #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+int
+main(int argc, char *argv[])
+{
 
+    int rc = fork();
+
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child path
+        printf("Hello\n");
+    } else {
+        // parent path
+        int rc_wait = wait(NULL); //Wait for child process to finish
+        printf("Goodbye\n");
+
+    }
+    return 0;
+}  
+```
+5 Answer: This code is the same as number 3 since it uses a wait() function already. Wait returns the PID of the child function if it succeeds; however, if it fails, wait() returns -1. If the wait() function is in the child function, wait() returns immediately since there is no child in a child function and returns an error.
 6. Write a slight modification of the previous program, this time using `waitpid()` instead of `wait()`. When would `waitpid()` be useful?
 
 ```cpp
