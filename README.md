@@ -52,10 +52,42 @@ Use the Linux in your CSE4001 container. If you are using macOS, you may use the
 
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+int
+main(int argc, char *argv[])
+{
+  int x = 100;
+
+    printf("Initial x: x = %d\n", x);
+
+    int rc = fork();
+
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child path changing x
+        printf("Child run: x = %d\n", x);
+        x = 120;
+        printf("Child changes x to %d\n", x);
+        printf("New Child run: x = %d\n", x);
+    } else {
+        // parent path changing x
+        int rc_wait = wait(NULL); //Wait for child process to finish
+        printf("Parent run: x = %d\n", x);
+        x = 200;
+        printf("Parent changes x to %d\n", x);
+        printf("New Parent run: x = %d\n", x);
+    }
+    return 0;
+}```
 ```
-
-
+![alt text for screen readers](p1exec.PNG).
+1 answer: The variable in the child process is 100 to start with, so is the parent. Once the child function runs, it can change the variable x to 120 and print that as x. This does not change the parent's variable x as 100, due to the process being duplicated from the fork. When the parent's variable x changes, the value becomes 200, but does not impact the child's variable x.
 2. Write a program that opens a file (with the `open()` system call) and then calls `fork()` to create a new process. Can both the child and parent access the file descriptor returned by `open()`? What happens when they are writing to the file concurrently, i.e., at the same time?
 
 ```cpp
