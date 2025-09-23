@@ -163,6 +163,7 @@ main(int argc, char *argv[])
 }  
 ```
 5 Answer: This code is the same as number 3 since it uses a wait() function already. Wait returns the PID of the child function if it succeeds; however, if it fails, wait() returns -1. If the wait() function is in the child function, wait() returns immediately if it succeeds. If not, the code returns an error.
+
 6. Write a slight modification of the previous program, this time using `waitpid()` instead of `wait()`. When would `waitpid()` be useful?
 
 ```cpp
