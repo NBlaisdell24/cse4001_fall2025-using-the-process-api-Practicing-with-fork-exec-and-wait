@@ -169,6 +169,7 @@ main(int argc, char *argv[])
 ```cpp
 // Add your code or answer here. You can also add screenshots showing your program's execution.  
 ```
+6 Answer: Waitpid is useful when you want to have extra control over and allows you to specify which child process you want to wait for.
 
 7. Write a program that creates a child process, and then in the child closes standard output (`STDOUT FILENO`). What happens if the child calls `printf()` to print some output after closing the descriptor?
 
