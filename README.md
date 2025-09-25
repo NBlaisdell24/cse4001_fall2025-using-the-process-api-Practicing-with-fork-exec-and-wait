@@ -172,8 +172,39 @@ main(int argc, char *argv[])
 4. Write a program that calls `fork()` and then calls some form of `exec()` to run the program `/bin/ls`. See if you can try all of the variants of `exec()`, including (on Linux) `execl()`, `execle()`, `execlp()`, `execv()`, `execvp()`, and `execvpe()`. Why do you think there are so many variants of the same basic call?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <sys/wait.h>
+
+int main(int argc, char *argv[])
+{
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child: execl test
+       printf("execl test\n");
+       execl("/bin/ls", "ls", "-l", NULL);
+       perror("execl fails");
+       exit(1);
+
+    } else {
+        // parent goes down this path (original process)
+      int wc = wait(NULL);  //waits for the child to complete
+      printf("Parent process finished\n");
+    }
+    return 0;
+}  
 ```
+![alt text for screen readers](p4exec.PNG)
+
+4 Answer: There are so many variants of the calls because it gives you options on how to specify output. The different types can help to execute lists, vectors, paths, and environments.
 
 5. Now write a program that uses `wait()` to wait for the child process to finish in the parent. What does `wait()` return? What happens if you use `wait()` in the child?
 
