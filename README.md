@@ -93,8 +93,48 @@ main(int argc, char *argv[])
 2. Write a program that opens a file (with the `open()` system call) and then calls `fork()` to create a new process. Can both the child and parent access the file descriptor returned by `open()`? What happens when they are writing to the file concurrently, i.e., at the same time?
 
 ```cpp
-// Add your code or answer here. You can also add screenshots showing your program's execution.  
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <assert.h>
+#include <sys/wait.h>
+
+int
+main(int argc, char *argv[])
+{
+   int i = 0;
+   int oD = open("./problem2.output", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+    if (oD < 0) {
+     perror("No Directory");
+     exit(1);
+    }
+
+    int rc = fork();
+    if (rc < 0) {
+        // fork failed; exit
+        fprintf(stderr, "fork failed\n");
+        exit(1);
+    } else if (rc == 0) {
+        // child: Writing to the file oD
+        char *childWrite = "Child run:\n";
+        write(oD, childWrite, strlen(childWrite)); //fwrite(fd, "hi") needs to be updated
+        close(oD);
+
+    } else {
+        // parent: Writing to the file oD
+        char *parentWrite = "Parent run:\n";
+        write(oD, parentWrite, strlen(parentWrite)); //fwrite(fd, "hi") needs to be updated
+        wait(NULL);
+        close(oD);
+    }
+    return 0;
+}
 ```
+![alt text for screen readers](p2exec.PNG).
+
+2 Answer: The parent and child are able to access the open file since it relates to the same open file accessed within the kernel. As they write concurrently, both parent and child write to the file, but the order depends on how they are scheduled.
 
 3. Write another program using `fork()`.The child process should print “hello”; the parent process should print “goodbye”. You should try to ensure that the child process always prints first; can you do this without calling `wait()` in the parent?
 
