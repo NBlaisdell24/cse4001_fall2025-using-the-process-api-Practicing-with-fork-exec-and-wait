@@ -304,4 +304,4 @@ main(int argc, char *argv[])
 ```
 ![alt text for screen readers](7exec.PNG)
 
-7 Answer: When priftf() is called after standard output is closed in the child, the output is not printed. In the code I provided, there is a printf statement for "Child run after close", which never prints, as seen below.
+7 Answer: When printf() is called after standard output is closed in the child, the output is not printed. In the code I provided, there is a printf statement for "Child run after close", which never prints, as seen above.
