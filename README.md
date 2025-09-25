@@ -119,15 +119,15 @@ main(int argc, char *argv[])
     } else if (rc == 0) {
         // child: Writing to the file oD
         char *childWrite = "Child run:\n";
-        write(oD, childWrite, strlen(childWrite)); //fwrite(fd, "hi") needs to be updated  //writing to file from child
-        close(oD);
+        write(oD, childWrite, strlen(childWrite));   //writing to file from child
+        close(oD);  //closing directory
 
     } else {
         // parent: Writing to the file oD
         char *parentWrite = "Parent run:\n";
         write(oD, parentWrite, strlen(parentWrite)); //writing to file from parent
         wait(NULL);
-        close(oD);
+        close(oD);  //closing directory
     }
     return 0;
 }
@@ -147,7 +147,7 @@ int
 main(int argc, char *argv[])
 {
 
-    int rc = fork();
+    int rc = fork();   //calling fork
 
     if (rc < 0) {
         // fork failed; exit
@@ -155,11 +155,11 @@ main(int argc, char *argv[])
         exit(1);
     } else if (rc == 0) {
         // child path
-        printf("Hello\n");
+        printf("Hello\n");  //printing child
     } else {
         // parent path
         int rc_wait = wait(NULL); //Wait for child process to finish
-        printf("Goodbye\n");
+        printf("Goodbye\n");  //printing parent
 
     }
     return 0;
@@ -190,8 +190,8 @@ int main(int argc, char *argv[])
     } else if (rc == 0) {
         // child: execl test
        printf("execl test\n");
-       execl("/bin/ls", "ls", "-l", NULL);
-       perror("execl fails");
+       execl("/bin/ls", "ls", "-l", NULL);  //execl being called 
+       perror("execl fails");  //exec test
        exit(1);
 
     } else {
@@ -259,8 +259,8 @@ main(int argc, char *argv[])
         printf("Hello\n");
     } else {
         // parent path
-        int childStatusInt;
-        int rc_wait = waitpid(rc, &childStatusInt, 0); //Wait for child process to finish
+        int childStatusInt;  //creating an int value to show the status of the child process
+        int rc_wait = waitpid(rc, &childStatusInt, 0); //Wait for child process to finish using waitpid()
         printf("Parent process finished. ");
         printf("Goodbye. The child: %d exited with a different process: %d\n", rc_wait, childStatusInt);
 
@@ -292,8 +292,8 @@ main(int argc, char *argv[])
     } else if (rc == 0) {
         // child path changing x
         printf("Child run before close\n");
-        close(STDOUT_FILENO);
-        printf("Child run after close\n");
+        close(STDOUT_FILENO);  //Closing STDOUT in child
+        printf("Child run after close\n");  //Attempt to run, but fails
     } else {
         // parent path changing x
         int rc_wait = wait(NULL); //Wait for child process to finish
