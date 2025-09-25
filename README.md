@@ -59,11 +59,11 @@ Use the Linux in your CSE4001 container. If you are using macOS, you may use the
 int
 main(int argc, char *argv[])
 {
-  int x = 100;
+  int x = 100;  //added integer in main
 
     printf("Initial x: x = %d\n", x);
 
-    int rc = fork();
+    int rc = fork();   //calling fork()
 
     if (rc < 0) {
         // fork failed; exit
@@ -105,13 +105,13 @@ int
 main(int argc, char *argv[])
 {
    int i = 0;
-   int oD = open("./problem2.output", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+   int oD = open("./problem2.output", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);  //opening file with open()
     if (oD < 0) {
-     perror("No Directory");
+     perror("No Directory");   //checks for directory
      exit(1);
     }
 
-    int rc = fork();
+    int rc = fork();   //calling fork()
     if (rc < 0) {
         // fork failed; exit
         fprintf(stderr, "fork failed\n");
@@ -119,13 +119,13 @@ main(int argc, char *argv[])
     } else if (rc == 0) {
         // child: Writing to the file oD
         char *childWrite = "Child run:\n";
-        write(oD, childWrite, strlen(childWrite)); //fwrite(fd, "hi") needs to be updated
+        write(oD, childWrite, strlen(childWrite)); //fwrite(fd, "hi") needs to be updated  //writing to file from child
         close(oD);
 
     } else {
         // parent: Writing to the file oD
         char *parentWrite = "Parent run:\n";
-        write(oD, parentWrite, strlen(parentWrite)); //fwrite(fd, "hi") needs to be updated
+        write(oD, parentWrite, strlen(parentWrite)); //writing to file from parent
         wait(NULL);
         close(oD);
     }
